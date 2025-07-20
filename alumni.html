@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="kn">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Shree Kannikaparameshwari Vidyarthi Nilaya</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Kannada&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h2>ಹಳೆಯ ವಿದ್ಯಾರ್ಥಿ ನೋಂದಣಿ</h2>
+  </header>
+
+  <form onsubmit="submitAlumni(event)">
+    <input type="text" placeholder="ಹೆಸರು" required>
+    <input type="text" placeholder="ಬ್ಯಾಚ್" required>
+    <input type="tel" placeholder="ದೂರವಾಣಿ ಸಂಖ್ಯೆ" required>
+    <input type="email" placeholder="ಇಮೇಲ್" required>
+    <textarea placeholder="ವೃತ್ತಿ / ವಿಳಾಸ" required></textarea>
+    <button type="submit">ನೋಂದಣಿ ಮಾಡಿ</button>
+  </form>
+
+  <script>
+    function submitAlumni(event) {
+      event.preventDefault();
+      alert("ನಿಮ್ಮ ನೋಂದಣಿ ಸಂಗ್ರಹಿಸಲಾಗಿದೆ! (ಡಾಟಾ ಇನ್ನೂ ಡೇಟಾಬೇಸ್‌ಗೆ ಕನೆಕ್ಟ್ ಆಗಿಲ್ಲ)");
+    }
+  </script>
+
+  <footer>
+    <p>© 2025 Published by Alumni of SKPVN Raichur</p>
+  </footer>
+</body>
+</html>

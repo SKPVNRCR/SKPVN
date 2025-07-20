@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="kn">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin Panel | Article Manager</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Kannada&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Noto Sans Kannada', sans-serif;
+      background-color: #fff8f0;
+      padding: 2rem;
+      color: #333;
+    }
+    h1 {
+      text-align: center;
+      color: #800000;
+      margin-bottom: 2rem;
+    }
+
+    .author-section {
+      border: 2px solid #ccc;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      background: #fffef9;
+      border-left: 6px solid #8e1515;
+      border-radius: 8px;
+    }
+
+    .entry-controls {
+      margin-top: 0.5rem;
+    }
+
+    .entry-controls button {
+      margin-right: 10px;
+      padding: 5px 10px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .entry-controls .edit { background: #e0e0e0; }
+    .entry-controls .delete { background: #ffdddd; }
+
+    input, textarea, select {
+      padding: 0.5rem;
+      margin-bottom: 0.5rem;
+      width: 100%;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+
+    button.add-btn {
+      background-color: #800000;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      margin-top: 1rem;
+    }
+
+    .collapsible {
+      font-weight: bold;
+      background: #8e1515;
+      color: white;
+      padding: 10px;
+      border-radius: 6px;
+      border: none;
+      cursor: pointer;
+      text-align: left;
+      width: 100%;
+    }
+
+    .content {
+      display: none;
+      padding: 10px;
+      margin-top: 5px;
+      background: #f9f9f9;
+      border-radius: 6px;
+    }
+
+    .content pre {
+      white-space: pre-wrap;
+      font-size: 1rem;
+    }
+  </style>
+</head>
+<body>
+  <h1>Admin Panel - ಲೇಖನಗಳು ಮತ್ತು ಕವನಗಳು</h1>
+
+  <!-- Input Fields -->
+  <div>
+    <input type="text" id="author" placeholder="ಲೇಖಕರ ಹೆಸರು">
+    <input type="text" id="title" placeholder="ಶೀರ್ಷಿಕೆ">
+    <select id="type">
+      <option value="📘 Article">📘 Article</option>
+      <option value="📝 Poem">📝 Poem</option>
+    </select>
+    <textarea id="content" rows="5" placeholder="ಲೇಖನ ಅಥವಾ ಕವನ"></textarea>
+    <button class="add-btn" onclick="addEntry()">➕ Add Entry</button>
+  </div>
+
+  <hr>
+
+  <div id="entries"></div>
+
+  <script>
+    let entries = JSON.parse(localStorage.getItem("articles")) || [];
+
+    function renderEntries() {
+      const container = document.getElementById("entries");
+      container.innerHTML = "";
+
+      entries.forEach((entry, index) => {
+        const div = document.createElement("div");
+        div.className = "author-section";
+
+        const h3 = document.createElement("h3");
+        h3.innerText = entry.author;
+
+        const collapsible = document.createElement("button");
+        collapsible.className = "collapsible";
+        collapsible.innerText = `${entry.type}: ${entry.title}`;
+        collapsible.onclick = () => {
+          const content = div.querySelector(".content");
+          content.style.display = content.style.display === "block" ? "none" : "block";
+        };
+
+        const content = document.createElement("div");
+        content.className = "content";
+        content.innerHTML = `<pre>${entry.content}</pre>`;
+
+        const controls = document.createElement("div");
+        controls.className = "entry-controls";
+
+        const del = document.createElement("button");
+        del.className = "delete";
+        del.innerText = "🗑 Delete";
+        del.onclick = () => {
+          if (confirm("Are you sure?")) {
+            entries.splice(index, 1);
+            updateStorage();
+          }
+        };
+
+        const edit = document.createElement("button");
+        edit.className = "edit";
+        edit.innerText = "✏️ Edit";
+        edit.onclick = () => {
+          const newAuthor = prompt("Author:", entry.author);
+          const newTitle = prompt("Title:", entry.title);
+          const newContent = prompt("Content:", entry.content);
+
+          if (newAuthor && newTitle && newContent) {
+            entries[index] = {
+              ...entry,
+              author: newAuthor,
+              title: newTitle,
+              content: newContent
+            };
+            updateStorage();
+          }
+        };
+
+        controls.appendChild(edit);
+        controls.appendChild(del);
+
+        div.appendChild(h3);
+        div.appendChild(collapsible);
+        div.appendChild(content);
+        div.appendChild(controls);
+        container.appendChild(div);
+      });
+    }
+
+    function addEntry() {
+      const author = document.getElementById("author").value;
+      const title = document.getElementById("title").value;
+      const type = document.getElementById("type").value;
+      const content = document.getElementById("content").value;
+
+      if (!author || !title || !content) {
+        alert("Fill all fields");
+        return;
+      }
+
+      entries.push({ author, title, type, content });
+      updateStorage();
+
+      document.getElementById("author").value = '';
+      document.getElementById("title").value = '';
+      document.getElementById("content").value = '';
+    }
+
+    function updateStorage() {
+      localStorage.setItem("articles", JSON.stringify(entries));
+      renderEntries();
+    }
+
+    renderEntries();
+  </script>
+</body>
+</html>

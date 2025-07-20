@@ -1,0 +1,149 @@
+body {
+  font-family: 'Noto Sans Kannada', 'Poppins', sans-serif;
+  margin: 0;
+  background: #fff8f0;
+  color: #333;
+}
+.english-text {
+  font-family: 'Poppins', sans-serif;
+}
+
+.kannada-text {
+  font-family: 'Noto Sans Kannada', sans-serif;
+}
+
+
+header {
+  background: maroon;
+  color: white;
+  text-align: center;
+  padding: 1em;
+}
+
+nav a {
+  margin: 10px;
+  color: gold;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+nav a:hover {
+  text-decoration: underline;
+}
+
+.ticker {
+  background: gold;
+  color: maroon;
+  padding: 5px;
+  font-weight: bold;
+  animation: scrollText 15s linear infinite;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+@keyframes scrollText {
+  0% { transform: translateX(100%); }
+  100% { transform: translateX(-100%); }
+}
+
+footer {
+  background: maroon;
+  color: white;
+  text-align: center;
+  padding: 10px;
+  position: relative;
+  bottom: 0;
+  width: 100%;
+}
+
+.center-img {
+  display: block;
+  margin: 20px auto;
+  max-width: 200px;
+}
+
+/* Form Styling */
+form {
+  background: white;
+  padding: 20px;
+  margin: 20px;
+  border-radius: 10px;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+input, textarea {
+  width: 100%;
+  padding: 8px;
+  margin: 5px 0 15px 0;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+button {
+  background: maroon;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+button:hover {
+  background: darkred;
+}
+
+/* Gallery */
+.gallery {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.gallery img {
+  width: 200px;
+  margin: 10px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+/* Background Hostel Image */
+.hostel-background img {
+  width: 100%;
+  height: 100%;
+  max-height: 400px;
+  object-fit: cover;
+  border-bottom: 5px solid maroon;
+}
+
+/* Center Ganesha with Frame */
+.framed {
+  border: 5px solid gold;
+  border-radius: 15px;
+  background: white;
+  box-shadow: 0 0 20px rgba(0,0,0,0.2);
+}
+
+/* Founder and Secretary Photos */
+.founder-secretary {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  margin-top: 20px;
+}
+
+.profile-img {
+  width: 200px;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 15px;
+  border: 4px solid maroon;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
+  margin-bottom: 10px;
+}
+
+.main-content {
+  text-align: center;
+  padding: 20px;
+}
