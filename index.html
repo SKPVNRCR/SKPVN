@@ -3,13 +3,13 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Welcome - Alumni Meet 2025</title>
+  <title>Alumni Meet 2025 - Completed</title>
   <link href="https://fonts.googleapis.com/css2?family=Baloo+Tamma+2&display=swap" rel="stylesheet">
   <style>
     body {
       margin: 0;
       font-family: 'Baloo Tamma 2', sans-serif;
-      background: #8e1515;
+      background: linear-gradient(135deg, #8e1515, #c44b4b);
       color: white;
       display: flex;
       justify-content: center;
@@ -17,31 +17,57 @@
       height: 100vh;
       flex-direction: column;
       text-align: center;
+      padding: 2rem;
     }
+
     h1 {
-      font-size: 2rem;
+      font-size: 2.5rem;
       margin-bottom: 1rem;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
     }
+
     p {
-      font-size: 1.2rem;
+      font-size: 1.3rem;
       margin-bottom: 2rem;
+      max-width: 600px;
+      line-height: 1.6;
     }
+
+    .highlight {
+      background: rgba(255,255,255,0.1);
+      padding: 0.5rem 1rem;
+      border-radius: 10px;
+      margin-top: 1rem;
+      display: inline-block;
+    }
+
     button {
       background: white;
       color: #8e1515;
       font-weight: bold;
-      padding: 12px 24px;
+      padding: 12px 28px;
       border: none;
       border-radius: 8px;
       cursor: pointer;
       font-size: 1rem;
+      transition: background 0.3s, color 0.3s;
+    }
+
+    button:hover {
+      background: #ffd2d2;
+      color: #5c0e0e;
     }
   </style>
 </head>
 <body>
-  <h1>🎊 ಹಳೆಯ ವಿದ್ಯಾರ್ಥಿಗಳ ಮಿಲನ - 2025</h1>
-  <p>ಶ್ರೀ ಕನ್ನಿಕಾಪರಮೇಶ್ವರಿ ವಿದ್ಯಾರ್ಥಿ ನಿಲಯ</p>
-  <button onclick="enterSite()">Enter</button>
+  <h1>🎉 2025 ಅಲಮ್ನಿ ಕಾರ್ಯಕ್ರಮ ಯಶಸ್ವಿಯಾಗಿ ಪೂರ್ಣಗೊಂಡಿದೆ!</h1>
+  <p>
+    ಶ್ರೀ ಕನ್ನಿಕಾಪರಮೇಶ್ವರಿ ವಿದ್ಯಾರ್ಥಿ ನಿಲಯದ ಅಲಮ್ನಿ ಸ್ಮೃತಿ ಸಂಚಿಕೆ - 2025 ಕಾರ್ಯಕ್ರಮವು
+    ಯಶಸ್ವಿಯಾಗಿ ನಡೆಯಿತು. ಎಲ್ಲ ಅತಿಥಿಗಳು ಮತ್ತು ಹಳೆಯ ವಿದ್ಯಾರ್ಥಿಗಳ ಪಾಲ್ಗೊಳ್ಳುವಿಕೆಯು ಈ ಸಮಾರಂಭವನ್ನು ಸ್ಮರಣೀಯವನ್ನಾಗಿ ಮಾಡಿದೆ.
+  </p>
+  <div class="highlight">💐 ಧನ್ಯವಾದಗಳು! Thank you for being part of this special event.</div>
+  <br><br>
+  <button onclick="enterSite()">➡️ Continue to Website</button>
 
   <script>
     function enterSite() {
