@@ -1,0 +1,27 @@
+name: "Article submission"
+description: "Submit an article/poem to SKPVN"
+title: "[ARTICLE] <Your Title Here>"
+labels: ["pending"]
+body:
+  - type: input
+    id: author
+    attributes:
+      label: Author Name
+      placeholder: "Your full name"
+    validations:
+      required: true
+  - type: input
+    id: category
+    attributes:
+      label: Category
+      placeholder: "Article / Poem / Essay"
+    validations:
+      required: true
+  - type: textarea
+    id: content
+    attributes:
+      label: Content
+      description: "Paste your article/poem text"
+      placeholder: "Your full text here"
+    validations:
+      required: true
