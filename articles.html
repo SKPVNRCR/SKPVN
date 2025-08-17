@@ -137,6 +137,121 @@
           container.innerHTML = '<p>Error fetching articles.</p>';
           return;
         }
+
+    /*
+     * Override loadArticles with GitHub Issues integration.
+     * This version fetches approved issues from the repository's GitHub API,
+     * parses metadata from the issue body (Author, Category, Content),
+     * groups entries by author, sorts them, and renders collapsible sections.
+     */
+    async function loadArticles() {
+      const container = document.getElementById('dynamic-articles');
+      container.innerHTML = '<p>Loading articles…</p>';
+      const api = 'https://api.github.com/repos/SKPVNRCR/SKPVN/issues?labels=approved&state=open&per_page=100';
+      try {
+        const response = await fetch(api);
+        if (!response.ok) {
+          container.innerHTML = '<p>Error fetching articles.</p>';
+          return;
+        }
+        const issues = await response.json();
+        if (!Array.isArray(issues) || issues.length === 0) {
+          container.innerHTML = '<p>No articles or poems have been published yet.</p>';
+          return;
+        }
+        // Helper to parse issue body into metadata
+        function parseBody(body) {
+          const lines = (body || '').split(/\r?\n/);
+          let author = '';
+          let category = '';
+          let content = '';
+          let inContent = false;
+          for (const ln of lines) {
+            const l = ln.trim();
+            if (!inContent) {
+              const idx = l.indexOf(':');
+              if (idx > -1) {
+                const key = l.slice(0, idx).trim().toLowerCase();
+                const val = l.slice(idx + 1).trim();
+                if (key.startsWith('author')) {
+                  author = val;
+                  continue;
+                }
+                if (key.startsWith('category')) {
+                  category = val;
+                  continue;
+                }
+                if (key.startsWith('content')) {
+                  inContent = true;
+                  content = val;
+                  continue;
+                }
+              }
+            } else {
+              content += '\n' + ln;
+            }
+          }
+          return { author, category, content };
+        }
+        // Group issues by author
+        const grouped = {};
+        issues.forEach(issue => {
+          const meta = parseBody(issue.body || '');
+          const authorName = meta.author || (issue.user && issue.user.login) || 'Unknown';
+          const category = meta.category || '';
+          const content = meta.content || (issue.body || '');
+          const entry = {
+            title: issue.title.replace(/^\[ARTICLE\]\s*/i, '').trim(),
+            author: authorName,
+            category,
+            content,
+            url: issue.html_url,
+            date: new Date(issue.created_at)
+          };
+          if (!grouped[authorName]) grouped[authorName] = [];
+          grouped[authorName].push(entry);
+        });
+        // Clear container and render groups
+        container.innerHTML = '';
+        Object.keys(grouped)
+          .sort((a, b) => a.localeCompare(b))
+          .forEach(author => {
+            const section = document.createElement('div');
+            section.className = 'author-section';
+            const h3 = document.createElement('h3');
+            h3.innerText = author;
+            section.appendChild(h3);
+            grouped[author]
+              .sort((a, b) => b.date - a.date)
+              .forEach(item => {
+                const collapsible = document.createElement('button');
+                collapsible.className = 'collapsible';
+                collapsible.innerText = (item.category ? item.category + ': ' : '') + item.title;
+                const contentDiv = document.createElement('div');
+                contentDiv.className = 'content';
+                contentDiv.innerHTML =
+                  '<pre>' + item.content + '</pre>' +
+                  '<p><a href="' +
+                  item.url +
+                  '" target="_blank" rel="noopener">View submission on GitHub</a></p>';
+                collapsible.addEventListener('click', () => {
+                  collapsible.classList.toggle('active');
+                  if (contentDiv.style.maxHeight) {
+                    contentDiv.style.maxHeight = null;
+                  } else {
+                    contentDiv.style.maxHeight = contentDiv.scrollHeight + 'px';
+                  }
+                });
+                section.appendChild(collapsible);
+                section.appendChild(contentDiv);
+              });
+            container.appendChild(section);
+          });
+      } catch (err) {
+        console.error(err);
+        container.innerHTML = '<p>Error loading articles.</p>';
+      }
+    }
         const articles = await response.json();
         if (!Array.isArray(articles)) {
           container.innerHTML = '<p>Invalid data format.</p>';
