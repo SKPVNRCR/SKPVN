@@ -10,7 +10,7 @@
       padding: 2rem;
       color: #333;
     }
-    .container {
+    .wrap {
       max-width: 760px;
       margin: auto;
     }
@@ -19,44 +19,75 @@
       color: #800000;
       margin-bottom: 1.5rem;
     }
-    .info-card {
+    .card {
       background: #fff;
       border-radius: 12px;
       padding: 1.5rem;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
     }
-    iframe {
-      width: 100%;
-      border: none;
-      min-height: 700px;
-    }
-    .note {
-      font-size: 0.9rem;
-      color: #555;
+    .grid {
+      display: grid;
+      gap: 1rem;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
       margin-top: 1rem;
-      background: #fffdf0;
-      padding: 1rem;
-      border-left: 4px solid #f2c94c;
-      border-radius: 8px;
     }
-    .note a {
+    .btn {
+      display: inline-block;
+      padding: 0.9rem 1.2rem;
+      border-radius: 10px;
+      text-decoration: none;
+      font-weight: 600;
+      border: 2px solid #800000;
       color: #800000;
+      text-align: center;
+      transition: background 0.2s, color 0.2s;
+    }
+    .btn.primary {
+      background: #800000;
+      color: #fff;
+    }
+    .btn.primary:hover {
+      background: #6b0000;
+    }
+    .btn:hover {
+      background: #f9eaea;
+    }
+    .muted {
+      color: #555;
+      font-size: 0.9rem;
+      margin-top: 1rem;
+    }
+    .tip {
+      background: #fffdf0;
+      border-left: 4px solid #f2c94c;
+      padding: 1rem;
+      border-radius: 8px;
+      margin-bottom: 0.5rem;
+    }
+    ul {
+      line-height: 1.6;
+      padding-left: 1.2rem;
     }
   </style>
 </head>
-  <body>
-  <div class="container">
+<body>
+  <div class="wrap">
     <h1>✍️ ಲೇಖನ ಸಲ್ಲಿಸಿ | Submit an Article/Poem</h1>
-    <div class="info-card">
-      <p>Please fill out the form below to submit your article or poem for the SKPVN Smriti magazine. Submissions are stored in our Google Sheet for review and approval.</p>
-      <!--
-        Replace the FORM_URL below with the actual Google Form embed URL. For example:
-        https://docs.google.com/forms/d/e/FORM_ID/viewform?embedded=true
-      -->
-      <iframe src="YOUR_GOOGLE_FORM_EMBED_URL" frameborder="0" allowfullscreen>Loading…</iframe>
-      <div class="note">
-        <p><strong>Having trouble?</strong> If the form doesn't load, you can <a href="YOUR_GOOGLE_FORM_LINK" target="_blank" rel="noopener">open the submission form in a new tab</a>.</p>
-        <p>After you submit, your entry will be reviewed by an administrator. Once approved, it will appear on the Published Articles page.</p>
+    <div class="card">
+      <p>We use <strong>GitHub Issues</strong> to collect submissions. This method is free, secure, and works perfectly with our GitHub Pages site.</p>
+      <div class="grid">
+        <a class="btn primary" href="https://github.com/SKPVNRCR/SKPVN/issues/new?template=article.yml" target="_blank" rel="noopener">Open Submission Form</a>
+        <a class="btn" href="https://github.com/SKPVNRCR/SKPVN/issues" target="_blank" rel="noopener">View All Submissions</a>
+      </div>
+      <div class="muted">
+        <div class="tip">
+          <strong>How publishing works:</strong>
+          <p>When you submit an article or poem, it appears as a GitHub issue labelled <code>pending</code>. An administrator will review your submission and, if approved, add the label <code>approved</code>. Once approved, your work will be published automatically on the Published Articles page.</p>
+        </div>
+        <ul>
+          <li>A free GitHub account is required to submit.</li>
+          <li>No data is stored in your browser (no localStorage).</li>
+        </ul>
       </div>
     </div>
   </div>
