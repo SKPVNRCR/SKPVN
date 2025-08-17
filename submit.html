@@ -19,65 +19,44 @@
       color: #800000;
       margin-bottom: 1.5rem;
     }
-    .card {
+    .info-card {
       background: #fff;
       border-radius: 12px;
       padding: 1.5rem;
       box-shadow: 0 4px 12px rgba(0,0,0,0.08);
     }
-    .btn {
-      display: inline-block;
-      padding: 0.9rem 1.3rem;
-      border-radius: 10px;
-      text-decoration: none;
-      font-weight: 600;
-      margin: 0.5rem 0;
-      text-align: center;
-      border: 2px solid #800000;
+    iframe {
+      width: 100%;
+      border: none;
+      min-height: 700px;
     }
-    .btn.primary {
-      background-color: #800000;
-      color: #fff;
-    }
-    .btn.secondary {
-      background-color: transparent;
-      color: #800000;
-    }
-    .grid {
-      display: grid;
-      gap: 1rem;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      margin-top: 1rem;
-    }
-    .muted {
-      color: #555;
+    .note {
       font-size: 0.9rem;
-      margin-top: 1.2rem;
-      line-height: 1.6;
-    }
-    .info {
+      color: #555;
+      margin-top: 1rem;
       background: #fffdf0;
-      border-left: 4px solid #f2c94c;
       padding: 1rem;
+      border-left: 4px solid #f2c94c;
       border-radius: 8px;
+    }
+    .note a {
+      color: #800000;
     }
   </style>
 </head>
-<body>
+  <body>
   <div class="container">
     <h1>✍️ ಲೇಖನ ಸಲ್ಲಿಸಿ | Submit an Article/Poem</h1>
-    <div class="card">
-      <p>We use <strong>GitHub Issues</strong> to collect submissions for the SKPVN Smriti magazine. Submitting via issues is free, secure and works seamlessly on GitHub Pages.</p>
-      <div class="grid">
-        <a class="btn primary" href="https://github.com/SKPVNRCR/SKPVN/issues/new?template=article.yml" target="_blank" rel="noopener">Open Submission Form</a>
-        <a class="btn secondary" href="https://github.com/SKPVNRCR/SKPVN/issues" target="_blank" rel="noopener">View All Submissions</a>
-      </div>
-      <div class="muted info">
-        <p><strong>How publishing works:</strong> New submissions are created with the label <code>pending</code>. An admin reviews each submission and adds the label <code>approved</code> when it is ready for publication. Approved articles and poems appear automatically on the Articles page.</p>
-        <ul>
-          <li>Submitters will need a free GitHub account.</li>
-          <li>No data is stored in your browser anymore—everything lives on GitHub.</li>
-        </ul>
+    <div class="info-card">
+      <p>Please fill out the form below to submit your article or poem for the SKPVN Smriti magazine. Submissions are stored in our Google Sheet for review and approval.</p>
+      <!--
+        Replace the FORM_URL below with the actual Google Form embed URL. For example:
+        https://docs.google.com/forms/d/e/FORM_ID/viewform?embedded=true
+      -->
+      <iframe src="YOUR_GOOGLE_FORM_EMBED_URL" frameborder="0" allowfullscreen>Loading…</iframe>
+      <div class="note">
+        <p><strong>Having trouble?</strong> If the form doesn't load, you can <a href="YOUR_GOOGLE_FORM_LINK" target="_blank" rel="noopener">open the submission form in a new tab</a>.</p>
+        <p>After you submit, your entry will be reviewed by an administrator. Once approved, it will appear on the Published Articles page.</p>
       </div>
     </div>
   </div>

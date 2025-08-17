@@ -119,77 +119,66 @@
      * by author and rendered using the same card/collapsible structure as
      * the static content. Only entries marked as approved are displayed.
      */
-    // Fetch and render approved articles from GitHub Issues instead of Google Sheets.
+    /**
+     * Fetch and render articles from a Google Sheet via the gviz JSON API. The sheet
+     * should have columns such as "Author Name", "Title", "Category", "Content" and
+     * optionally an "Approved" column. Rows marked as approved (or with no
+     * Approved value) will be shown. Articles are grouped by author and
+     * displayed in collapsible sections.
+     */
     async function loadArticles() {
       const container = document.getElementById('dynamic-articles');
       container.innerHTML = '<p>Loading articles…</p>';
-      const apiUrl = 'https://api.github.com/repos/SKPVNRCR/SKPVN/issues?labels=approved&state=open&per_page=100';
+      // URL to your Google Apps Script web app that returns JSON array of article objects
+      const scriptUrl = 'https://script.google.com/macros/s/AKfycbwKq4wT137X904IFUSOpoNNn-XZzTklVw1YqtTxfH3HRYWgyuvm7fVq84wvEUdO3C8/exec';
       try {
-        const resp = await fetch(apiUrl);
-        if (!resp.ok) throw new Error('GitHub API returned ' + resp.status);
-        const issues = await resp.json();
-        if (!Array.isArray(issues) || issues.length === 0) {
-          container.innerHTML = '<p>No approved articles or poems have been published yet.</p>';
+        const response = await fetch(scriptUrl);
+        if (!response.ok) {
+          container.innerHTML = '<p>Error fetching articles.</p>';
           return;
         }
-        // Helper: parse issue body for author, category and content
-        const parseBody = body => {
-          const lines = (body || '').split(/\r?\n/);
-          let author = '', category = '', content = '';
-          let inContent = false;
-          for (const ln of lines) {
-            const trimmed = ln.trim();
-            if (!inContent) {
-              if (/^author name\s*:/i.test(trimmed)) {
-                author = trimmed.split(':').slice(1).join(':').trim();
-                continue;
-              }
-              if (/^category\s*:/i.test(trimmed)) {
-                category = trimmed.split(':').slice(1).join(':').trim();
-                continue;
-              }
-              if (/^content\s*:/i.test(trimmed)) {
-                inContent = true;
-                content = trimmed.replace(/^content\s*:/i, '').trim();
-                continue;
-              }
-            } else {
-              content += '\n' + ln;
-            }
+        const articles = await response.json();
+        if (!Array.isArray(articles)) {
+          container.innerHTML = '<p>Invalid data format.</p>';
+          return;
+        }
+        // Filter approved entries based on the Approved field
+        const approved = articles.filter(article => {
+          if (article.Approved === undefined || article.Approved === '' || article.Approved === null) {
+            return true;
           }
-          return { author, category, content: content.trim() };
-        };
-        // Group issues by author
-        const grouped = {};
-        issues.forEach(issue => {
-          const meta = parseBody(issue.body || '');
-          const authorName = meta.author || (issue.user && issue.user.login) || 'Unknown';
-          if (!grouped[authorName]) grouped[authorName] = [];
-          grouped[authorName].push({
-            title: issue.title.replace(/^\[ARTICLE\]\s*/i, '').trim(),
-            category: meta.category || '',
-            content: meta.content || issue.body || '',
-            url: issue.html_url,
-            date: new Date(issue.created_at)
-          });
+          const val = String(article.Approved).toLowerCase();
+          return ['true','yes','approved','1','y','t'].includes(val);
         });
-        // Clear container and render authors
+        if (approved.length === 0) {
+          container.innerHTML = '<p>No articles or poems have been published yet.</p>';
+          return;
+        }
+        // Group approved articles by author
+        const grouped = {};
+        approved.forEach(article => {
+          const author = article['Author Name'] || article.author || article.Author || 'Unknown';
+          if (!grouped[author]) grouped[author] = [];
+          grouped[author].push(article);
+        });
         container.innerHTML = '';
-        Object.keys(grouped).sort((a,b) => a.localeCompare(b)).forEach(author => {
+        // Render sections for each author
+        Object.keys(grouped).forEach(author => {
           const section = document.createElement('div');
           section.className = 'author-section';
           const h3 = document.createElement('h3');
           h3.innerText = author;
           section.appendChild(h3);
-          // Sort entries by newest first
-          grouped[author].sort((a,b) => b.date - a.date).forEach(entry => {
+          grouped[author].forEach(entry => {
             const collapsible = document.createElement('button');
             collapsible.className = 'collapsible';
-            const titleLine = (entry.category ? entry.category + ': ' : '') + entry.title;
-            collapsible.innerHTML = titleLine;
+            const category = entry['Category'] || entry['Type'] || entry['type'] || entry.Category || '';
+            const title = entry['Title'] || entry['title'] || entry.Title || '';
+            collapsible.innerText = (category ? category + ': ' : '') + title;
             const contentDiv = document.createElement('div');
             contentDiv.className = 'content';
-            contentDiv.innerHTML = '<pre>' + entry.content + '</pre>' + '<p><a href="' + entry.url + '" target="_blank" rel="noopener">View on GitHub</a></p>';
+            const body = entry['Content'] || entry['content'] || entry.Content || '';
+            contentDiv.innerHTML = '<pre>' + body + '</pre>';
             collapsible.addEventListener('click', () => {
               collapsible.classList.toggle('active');
               if (contentDiv.style.maxHeight) {
@@ -203,9 +192,9 @@
           });
           container.appendChild(section);
         });
-      } catch (err) {
-        console.error(err);
-        container.innerHTML = '<p>Error loading articles. Please try again later.</p>';
+      } catch (error) {
+        console.error(error);
+        container.innerHTML = '<p>Error loading articles.</p>';
       }
     }
     // Load articles on page load
