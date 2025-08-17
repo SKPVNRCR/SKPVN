@@ -1,8 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
   <meta charset="UTF-8">
   <title>Hostel Details</title>
+  <!-- Google Fonts for typography -->
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
   <style>
     body {
@@ -10,95 +11,210 @@
       background-color: #fff8f0;
       margin: 0;
       padding: 0;
+      color: #333;
     }
-
     h1 {
       text-align: center;
       color: #8e1515;
-      padding: 1rem;
+      margin: 1rem 0;
     }
-
+    /* Simple responsive image gallery */
     .gallery {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
       gap: 1.5rem;
       padding: 2rem;
       max-width: 1200px;
       margin: auto;
     }
-
     .photo-card {
-      background: white;
-      border-radius: 15px;
+      background: #ffffff;
+      border-radius: 12px;
       overflow: hidden;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-      transition: transform 0.3s;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      transition: transform 0.3s ease;
     }
-
     .photo-card:hover {
-      transform: scale(1.02);
+      transform: translateY(-4px);
     }
-
     .photo-card img {
       width: 100%;
       height: 200px;
       object-fit: cover;
-      border-bottom: 3px solid #8e1515;
     }
-
     .caption {
-      padding: 1rem;
+      padding: 0.75rem;
       text-align: center;
       font-weight: 600;
-      color: #333;
+      color: #4b0082;
     }
-
+    /* Additional sections styling */
+    .trust-directory {
+      max-width: 1200px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+    }
+    .trust-directory section {
+      margin-bottom: 2rem;
+      background: #fffdf0;
+      border-radius: 10px;
+      padding: 1.5rem;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    }
+    .trust-directory h2 {
+      color: #8e1515;
+      margin-top: 0;
+    }
+    .trust-directory h3 {
+      color: #4b0082;
+      margin-bottom: 0.5rem;
+    }
+    .trust-directory ul {
+      list-style: none;
+      padding-left: 0;
+    }
+    .trust-directory li {
+      margin-bottom: 0.5rem;
+    }
+    .trust-directory li a {
+      margin-left: 0.5rem;
+      text-decoration: none;
+      color: #0066cc;
+    }
     footer {
-      background-color: #8e1515;
-      color: white;
       text-align: center;
+      background: #8e1515;
+      color: #fff;
       padding: 1rem;
       margin-top: 3rem;
-      border-radius: 0 0 10px 10px;
     }
   </style>
 </head>
 <body>
-
-  <h1>🏨 Hostel Details</h1>
-
+  <h1>🏡 Hostel Details</h1>
+  <!-- Image gallery showcasing hostel facilities -->
   <div class="gallery">
-
     <!-- Hostel Photo 1 -->
     <div class="photo-card">
       <img src="images/hostel-front.png" alt="Hostel Front View">
       <div class="caption">Hostel Front View</div>
     </div>
-
     <!-- Hostel Photo 2 -->
     <div class="photo-card">
       <img src="images/dining-hall.png" alt="Dining Hall">
       <div class="caption">Dining Hall</div>
     </div>
-
     <!-- Hostel Photo 3 -->
     <div class="photo-card">
       <img src="images/study-room.jpg" alt="Study Room">
       <div class="caption">Study Room</div>
     </div>
-
     <!-- Hostel Photo 4 -->
     <div class="photo-card">
       <img src="images/hostel-room.jpg" alt="Hostel Room">
       <div class="caption">Hostel Room</div>
     </div>
-
     <!-- Add more cards as needed -->
+  </div>
+
+  <!-- Charitable Trust and Hostel Directory Section -->
+  <div class="trust-directory">
+    <!-- Trust Information -->
+    <section>
+      <h2>Karnataka Arya Vysya Charitable Trust</h2>
+      <p><strong>Mission &amp; Services:</strong> Scholarships, hostel projects, and community upliftment (est. 1973).</p>
+      <p><strong>Address:</strong> No. 3, Seva Jyothi, Vani Vilas Road, V.V. Puram, Bengaluru – 560004</p>
+      <p><strong>State Helpdesk (KAVMS HQ):</strong> No. 16, Seshadri Road, Gandhinagar, Bengaluru – 560009 | Ph: 080-22206151 / 22206152 / 22206153 | WhatsApp: 96639 00439</p>
+    </section>
+    <!-- Hostel Directory by City -->
+    <section>
+      <h2>Karnataka — Arya Vysya Hostels (by city)</h2>
+      <h3>Bengaluru — Boys</h3>
+      <ul>
+        <li><strong>MAV Boys Hostel</strong> — #117, Sampige Rd (7th–8th Cross), Malleswaram.
+          <a target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=117+Sampige+Road+Malleswaram+Bengaluru">Directions</a>
+        </li>
+        <li><strong>AVOPA Boys Hostel</strong> — #13, 9th Cross, Adarshanagar, Chamarajpet.
+          <a target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=13+9th+Cross+Adarshanagar+Chamarajpet+Bengaluru">Directions</a>
+        </li>
+        <li><strong>CVMS Boys Hostel</strong> — Above Karur Vysya Bank, Avenue Road.
+          <a target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=Avenue+Road+Karur+Vysya+Bank+Bengaluru">Directions</a>
+        </li>
+        <li><strong>Vasavi Hostel</strong> — Behind Jain Degree College, Vasavi Temple St, V.V. Puram.
+          <a target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=Vasavi+Temple+Street+VV+Puram+Bengaluru">Directions</a>
+        </li>
+      </ul>
+      <h3>Bengaluru — Girls</h3>
+      <ul>
+        <li><strong>Malleshwaram Arya Vysya Sangha Girls Hostel</strong> — 7th Cross, Swimming Pool Extn., Malleswaram.
+          <a target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=Swimming+Pool+Extension+Malleshwaram+Bengaluru">Directions</a>
+        </li>
+        <li><strong>DLVR Ladies Hostel</strong> — #24 Market Road, V.V. Puram.
+          <a target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=24+Market+Road+VV+Puram+Bengaluru">Directions</a>
+        </li>
+        <li><strong>NLKS Ladies Hostel</strong> — #1127A, 5th Main, 7th Cross, Chamarajpet.
+          <a target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=1127A+5th+Main+7th+Cross+Chamarajpet+Bengaluru">Directions</a>
+        </li>
+        <li><strong>Sri Vasavi Sharada Ladies Hostel</strong> — 8th Main, 2nd Block, Jayanagar.
+          <a target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=8th+Main+2nd+Block+Jayanagar+Bengaluru">Directions</a>
+        </li>
+      </ul>
+      <h3>Mysuru</h3>
+      <ul>
+        <li><strong>Arya Vysya Hostel (KAVMS)</strong> — Geetha Mandir Rd, Mysuru – 570001.
+          <a target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=Geetha+Mandir+Road+Mysuru+570001">Directions</a>
+        </li>
+        <li><strong>Sri Vasavi Free Students Hostel</strong> — near Sree Kanyaka Parameshwari Temple, Halladkere.
+          <a target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=Halladkere+Mysuru+Sri+Vasavi+Hostel">Directions</a>
+        </li>
+      </ul>
+      <h3>Tumakuru</h3>
+      <ul>
+        <li><strong>AVOPA Free Hostel</strong> — Laya Nagar West, Tumakuru – 572101.
+          <a target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=Laya+Nagar+West+Tumakuru+572101">Directions</a>
+        </li>
+        <li><strong>Vasavi Hostel</strong> — D.S. Road, opp. Siddaganga Diagnostic Centre, Tumakuru – 572101.
+          <a target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=DS+Road+Tumakuru+572101">Directions</a>
+        </li>
+      </ul>
+      <h3>Ballari</h3>
+      <ul>
+        <li><strong>Sri Vasavi Boys Hostel</strong> — Kanyaka Parameshwari Temple St, Ballari – 583101. Ph: 94480 73797
+          <a target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=Kanyaka+Parameshwari+Temple+Street+Ballari+583101">Directions</a>
+        </li>
+        <li><strong>Vysya Hostel (Pappal Bazar)</strong> — Pappal Bazar, Ballari – 583101.
+          <a target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=Pappal+Bazar+Ballari+583101">Directions</a>
+        </li>
+      </ul>
+      <h3>Davanagere</h3>
+      <ul>
+        <li><strong>Vysya Hostel (City)</strong> — near Jayadeva Circle, Davanagere.
+          <a target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=Jayadeva+Circle+Davanagere">Directions</a>
+        </li>
+      </ul>
+      <h3>Hassan</h3>
+      <ul>
+        <li><strong>Vasavi Vidyarthi Nilaya</strong> — Ravindra Nagar, Hassan.
+          <a target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=Ravindra+Nagar+Hassan+Vasavi+Vidyarthi+Nilaya">Directions</a>
+        </li>
+      </ul>
+      <h3>Shivamogga</h3>
+      <ul>
+        <li><strong>Arya Vysya Hostel</strong> — Vidyanagar, Shivamogga – 577203.
+          <a target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=Vidyanagar+Shivamogga+577203">Directions</a>
+        </li>
+      </ul>
+      <h3>Raichur</h3>
+      <ul>
+        <li><strong>Sri Kannika Parameshwari Boys Hostel</strong> — near Gajagarpet/Chowdamma Kade, Raichur.
+          <a target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=Gajagarpet+Raichur">Directions</a>
+        </li>
+      </ul>
+    </section>
   </div>
 
   <footer>
     © 2025 SKPVN Raichur | Hostel Committee
   </footer>
-
 </body>
 </html>
