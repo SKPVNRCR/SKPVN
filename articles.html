@@ -119,52 +119,94 @@
      * by author and rendered using the same card/collapsible structure as
      * the static content. Only entries marked as approved are displayed.
      */
-    function loadArticles() {
+    // Fetch and render approved articles from GitHub Issues instead of Google Sheets.
+    async function loadArticles() {
       const container = document.getElementById('dynamic-articles');
-      container.innerHTML = '';
-      const articles = JSON.parse(localStorage.getItem('articles')) || [];
-      // Filter approved entries (in case some remain unapproved)
-      const approved = articles.filter(entry => entry.approved);
-      if (approved.length === 0) {
-        container.innerHTML = '<p>No articles or poems have been published yet.</p>';
-        return;
-      }
-      // Group by author
-      const grouped = {};
-      approved.forEach(entry => {
-        if (!grouped[entry.author]) {
-          grouped[entry.author] = [];
+      container.innerHTML = '<p>Loading articles…</p>';
+      const apiUrl = 'https://api.github.com/repos/SKPVNRCR/SKPVN/issues?labels=approved&state=open&per_page=100';
+      try {
+        const resp = await fetch(apiUrl);
+        if (!resp.ok) throw new Error('GitHub API returned ' + resp.status);
+        const issues = await resp.json();
+        if (!Array.isArray(issues) || issues.length === 0) {
+          container.innerHTML = '<p>No approved articles or poems have been published yet.</p>';
+          return;
         }
-        grouped[entry.author].push(entry);
-      });
-      // Create sections per author
-      Object.keys(grouped).forEach(author => {
-        const section = document.createElement('div');
-        section.className = 'author-section';
-        const h3 = document.createElement('h3');
-        h3.innerText = author;
-        section.appendChild(h3);
-        grouped[author].forEach(entry => {
-          const collapsible = document.createElement('button');
-          collapsible.className = 'collapsible';
-          collapsible.innerText = `${entry.type}: ${entry.title}`;
-          const content = document.createElement('div');
-          content.className = 'content';
-          content.innerHTML = `<pre>${entry.content}</pre>`;
-          // Toggle expansion on click
-          collapsible.addEventListener('click', () => {
-            collapsible.classList.toggle('active');
-            if (content.style.maxHeight) {
-              content.style.maxHeight = null;
+        // Helper: parse issue body for author, category and content
+        const parseBody = body => {
+          const lines = (body || '').split(/\r?\n/);
+          let author = '', category = '', content = '';
+          let inContent = false;
+          for (const ln of lines) {
+            const trimmed = ln.trim();
+            if (!inContent) {
+              if (/^author name\s*:/i.test(trimmed)) {
+                author = trimmed.split(':').slice(1).join(':').trim();
+                continue;
+              }
+              if (/^category\s*:/i.test(trimmed)) {
+                category = trimmed.split(':').slice(1).join(':').trim();
+                continue;
+              }
+              if (/^content\s*:/i.test(trimmed)) {
+                inContent = true;
+                content = trimmed.replace(/^content\s*:/i, '').trim();
+                continue;
+              }
             } else {
-              content.style.maxHeight = content.scrollHeight + 'px';
+              content += '\n' + ln;
             }
+          }
+          return { author, category, content: content.trim() };
+        };
+        // Group issues by author
+        const grouped = {};
+        issues.forEach(issue => {
+          const meta = parseBody(issue.body || '');
+          const authorName = meta.author || (issue.user && issue.user.login) || 'Unknown';
+          if (!grouped[authorName]) grouped[authorName] = [];
+          grouped[authorName].push({
+            title: issue.title.replace(/^\[ARTICLE\]\s*/i, '').trim(),
+            category: meta.category || '',
+            content: meta.content || issue.body || '',
+            url: issue.html_url,
+            date: new Date(issue.created_at)
           });
-          section.appendChild(collapsible);
-          section.appendChild(content);
         });
-        container.appendChild(section);
-      });
+        // Clear container and render authors
+        container.innerHTML = '';
+        Object.keys(grouped).sort((a,b) => a.localeCompare(b)).forEach(author => {
+          const section = document.createElement('div');
+          section.className = 'author-section';
+          const h3 = document.createElement('h3');
+          h3.innerText = author;
+          section.appendChild(h3);
+          // Sort entries by newest first
+          grouped[author].sort((a,b) => b.date - a.date).forEach(entry => {
+            const collapsible = document.createElement('button');
+            collapsible.className = 'collapsible';
+            const titleLine = (entry.category ? entry.category + ': ' : '') + entry.title;
+            collapsible.innerHTML = titleLine;
+            const contentDiv = document.createElement('div');
+            contentDiv.className = 'content';
+            contentDiv.innerHTML = '<pre>' + entry.content + '</pre>' + '<p><a href="' + entry.url + '" target="_blank" rel="noopener">View on GitHub</a></p>';
+            collapsible.addEventListener('click', () => {
+              collapsible.classList.toggle('active');
+              if (contentDiv.style.maxHeight) {
+                contentDiv.style.maxHeight = null;
+              } else {
+                contentDiv.style.maxHeight = contentDiv.scrollHeight + 'px';
+              }
+            });
+            section.appendChild(collapsible);
+            section.appendChild(contentDiv);
+          });
+          container.appendChild(section);
+        });
+      } catch (err) {
+        console.error(err);
+        container.innerHTML = '<p>Error loading articles. Please try again later.</p>';
+      }
     }
     // Load articles on page load
     loadArticles();
