@@ -1,9 +1,7 @@
-<!DOCTYPE html>
-<html lang="kn">
 <head>
   <meta charset="UTF-8">
   <title>Admin Panel | Article Manager</title>
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Kannada&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Kannada&amp;display=swap" rel="stylesheet">
   <style>
     body {
       font-family: 'Noto Sans Kannada', sans-serif;
@@ -17,6 +15,7 @@
       margin-bottom: 2rem;
     }
 
+    /* Card-like styling for author sections */
     .author-section {
       border: 2px solid #ccc;
       padding: 1rem;
@@ -40,6 +39,7 @@
 
     .entry-controls .edit { background: #e0e0e0; }
     .entry-controls .delete { background: #ffdddd; }
+    .entry-controls .approve { background: #ddffdd; }
 
     input, textarea, select {
       padding: 0.5rem;
@@ -69,6 +69,19 @@
       cursor: pointer;
       text-align: left;
       width: 100%;
+      position: relative;
+    }
+    .collapsible::after {
+      content: '▼';
+      position: absolute;
+      right: 20px;
+      font-size: 0.9rem;
+      top: 50%;
+      transform: translateY(-50%);
+      transition: transform 0.3s ease;
+    }
+    .collapsible.active::after {
+      transform: translateY(-50%) rotate(180deg);
     }
 
     .content {
@@ -78,7 +91,6 @@
       background: #f9f9f9;
       border-radius: 6px;
     }
-
     .content pre {
       white-space: pre-wrap;
       font-size: 1rem;
@@ -88,8 +100,15 @@
 <body>
   <h1>Admin Panel - ಲೇಖನಗಳು ಮತ್ತು ಕವನಗಳು</h1>
 
-  <!-- Input Fields -->
+  <!-- Submission manager -->
+  <h2>🕒 Pending Submissions</h2>
+  <div id="pending-entries"></div>
+
+  <hr>
+
+  <!-- Form for adding approved entries directly -->
   <div>
+    <h2>➕ Add Approved Entry</h2>
     <input type="text" id="author" placeholder="ಲೇಖಕರ ಹೆಸರು">
     <input type="text" id="title" placeholder="ಶೀರ್ಷಿಕೆ">
     <select id="type">
@@ -102,69 +121,76 @@
 
   <hr>
 
+  <!-- Approved articles/poems list -->
+  <h2>✅ Approved Articles & Poems</h2>
   <div id="entries"></div>
 
   <script>
-    let entries = JSON.parse(localStorage.getItem("articles")) || [];
+    // Retrieve existing approved articles and pending submissions from localStorage
+    let articles = JSON.parse(localStorage.getItem('articles')) || [];
+    let pending = JSON.parse(localStorage.getItem('submissions')) || [];
 
-    function renderEntries() {
-      const container = document.getElementById("entries");
-      container.innerHTML = "";
+    /**
+     * Persist both collections to localStorage and re-render lists.
+     */
+    function updateStorage() {
+      localStorage.setItem('articles', JSON.stringify(articles));
+      localStorage.setItem('submissions', JSON.stringify(pending));
+      renderPending();
+      renderArticles();
+    }
 
-      entries.forEach((entry, index) => {
-        const div = document.createElement("div");
-        div.className = "author-section";
-
-        const h3 = document.createElement("h3");
+    /**
+     * Render the list of pending submissions with approve/reject controls.
+     */
+    function renderPending() {
+      const container = document.getElementById('pending-entries');
+      container.innerHTML = '';
+      if (pending.length === 0) {
+        container.innerHTML = '<p>No pending submissions.</p>';
+        return;
+      }
+      pending.forEach((entry, index) => {
+        const div = document.createElement('div');
+        div.className = 'author-section';
+        const h3 = document.createElement('h3');
         h3.innerText = entry.author;
-
-        const collapsible = document.createElement("button");
-        collapsible.className = "collapsible";
+        const collapsible = document.createElement('button');
+        collapsible.className = 'collapsible';
         collapsible.innerText = `${entry.type}: ${entry.title}`;
         collapsible.onclick = () => {
-          const content = div.querySelector(".content");
-          content.style.display = content.style.display === "block" ? "none" : "block";
+          const content = div.querySelector('.content');
+          collapsible.classList.toggle('active');
+          content.style.display = content.style.display === 'block' ? 'none' : 'block';
         };
-
-        const content = document.createElement("div");
-        content.className = "content";
+        const content = document.createElement('div');
+        content.className = 'content';
         content.innerHTML = `<pre>${entry.content}</pre>`;
-
-        const controls = document.createElement("div");
-        controls.className = "entry-controls";
-
-        const del = document.createElement("button");
-        del.className = "delete";
-        del.innerText = "🗑 Delete";
-        del.onclick = () => {
-          if (confirm("Are you sure?")) {
-            entries.splice(index, 1);
+        const controls = document.createElement('div');
+        controls.className = 'entry-controls';
+        // Approve button
+        const approveBtn = document.createElement('button');
+        approveBtn.className = 'approve';
+        approveBtn.innerText = '✅ Approve';
+        approveBtn.onclick = () => {
+          // Move entry from pending to articles and mark approved
+          const approvedEntry = { ...entry, approved: true };
+          articles.push(approvedEntry);
+          pending.splice(index, 1);
+          updateStorage();
+        };
+        // Reject (delete) button
+        const rejectBtn = document.createElement('button');
+        rejectBtn.className = 'delete';
+        rejectBtn.innerText = '🗑 Reject';
+        rejectBtn.onclick = () => {
+          if (confirm('Are you sure you want to reject this submission?')) {
+            pending.splice(index, 1);
             updateStorage();
           }
         };
-
-        const edit = document.createElement("button");
-        edit.className = "edit";
-        edit.innerText = "✏️ Edit";
-        edit.onclick = () => {
-          const newAuthor = prompt("Author:", entry.author);
-          const newTitle = prompt("Title:", entry.title);
-          const newContent = prompt("Content:", entry.content);
-
-          if (newAuthor && newTitle && newContent) {
-            entries[index] = {
-              ...entry,
-              author: newAuthor,
-              title: newTitle,
-              content: newContent
-            };
-            updateStorage();
-          }
-        };
-
-        controls.appendChild(edit);
-        controls.appendChild(del);
-
+        controls.appendChild(approveBtn);
+        controls.appendChild(rejectBtn);
         div.appendChild(h3);
         div.appendChild(collapsible);
         div.appendChild(content);
@@ -173,31 +199,97 @@
       });
     }
 
-    function addEntry() {
-      const author = document.getElementById("author").value;
-      const title = document.getElementById("title").value;
-      const type = document.getElementById("type").value;
-      const content = document.getElementById("content").value;
-
-      if (!author || !title || !content) {
-        alert("Fill all fields");
+    /**
+     * Render the list of approved articles and poems with edit/delete options.
+     */
+    function renderArticles() {
+      const container = document.getElementById('entries');
+      container.innerHTML = '';
+      if (articles.length === 0) {
+        container.innerHTML = '<p>No approved articles or poems.</p>';
         return;
       }
+      articles.forEach((entry, index) => {
+        const div = document.createElement('div');
+        div.className = 'author-section';
+        const h3 = document.createElement('h3');
+        h3.innerText = entry.author;
+        const collapsible = document.createElement('button');
+        collapsible.className = 'collapsible';
+        collapsible.innerText = `${entry.type}: ${entry.title}`;
+        collapsible.onclick = () => {
+          const content = div.querySelector('.content');
+          collapsible.classList.toggle('active');
+          content.style.display = content.style.display === 'block' ? 'none' : 'block';
+        };
+        const content = document.createElement('div');
+        content.className = 'content';
+        content.innerHTML = `<pre>${entry.content}</pre>`;
+        const controls = document.createElement('div');
+        controls.className = 'entry-controls';
+        // Edit button
+        const editBtn = document.createElement('button');
+        editBtn.className = 'edit';
+        editBtn.innerText = '✏️ Edit';
+        editBtn.onclick = () => {
+          const newAuthor = prompt('Author:', entry.author);
+          const newTitle = prompt('Title:', entry.title);
+          const newContent = prompt('Content:', entry.content);
+          if (newAuthor && newTitle && newContent) {
+            articles[index] = {
+              ...entry,
+              author: newAuthor,
+              title: newTitle,
+              content: newContent
+            };
+            updateStorage();
+          }
+        };
+        // Delete button
+        const delBtn = document.createElement('button');
+        delBtn.className = 'delete';
+        delBtn.innerText = '🗑 Delete';
+        delBtn.onclick = () => {
+          if (confirm('Are you sure you want to delete this entry?')) {
+            articles.splice(index, 1);
+            updateStorage();
+          }
+        };
+        controls.appendChild(editBtn);
+        controls.appendChild(delBtn);
+        div.appendChild(h3);
+        div.appendChild(collapsible);
+        div.appendChild(content);
+        div.appendChild(controls);
+        container.appendChild(div);
+      });
+    }
 
-      entries.push({ author, title, type, content });
+    /**
+     * Add a new article or poem directly to the approved list via the admin
+     * interface. A unique id is created to maintain consistency with
+     * submissions.
+     */
+    function addEntry() {
+      const author = document.getElementById('author').value;
+      const title = document.getElementById('title').value;
+      const type = document.getElementById('type').value;
+      const content = document.getElementById('content').value;
+      if (!author || !title || !content) {
+        alert('Fill all fields');
+        return;
+      }
+      const id = Date.now().toString();
+      articles.push({ id, author, title, type, content, approved: true });
+      // Clear form
+      document.getElementById('author').value = '';
+      document.getElementById('title').value = '';
+      document.getElementById('content').value = '';
       updateStorage();
-
-      document.getElementById("author").value = '';
-      document.getElementById("title").value = '';
-      document.getElementById("content").value = '';
     }
 
-    function updateStorage() {
-      localStorage.setItem("articles", JSON.stringify(entries));
-      renderEntries();
-    }
-
-    renderEntries();
+    // Initial render on page load
+    renderPending();
+    renderArticles();
   </script>
 </body>
-</html>
